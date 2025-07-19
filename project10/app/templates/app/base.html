@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}add a good name here !!{% endblock %}</title>
+    <style>
+        :root {
+            --primary-color: #00bcd4;
+            --primary-hover: #0288d1;
+            --bg-dark: #121212;
+            --bg-panel: #1e1e1e;
+            --text-light: #e0e0e0;
+            --text-muted: #777;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .top-panel {
+            background: var(--bg-panel);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .nav-link, .logout-btn {
+            color: var(--primary-color);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .nav-link:hover, .logout-btn:hover {
+            background-color: rgba(0, 188, 212, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            margin: 0;
+        }
+        
+        .user-greeting {
+            color: var(--text-muted);
+            margin-right: 15px;
+            font-size: 0.9rem;
+        }
+        
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .top-panel {
+                padding: 10px 15px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="top-panel">
+        <a href="{% url 'blog_home' %}" class="logo">add a good name here !!</a>
+        
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+                <span class="user-greeting">Hello, {{ user.username }}</span>
+                <a href="{% url 'user_posts' %}" class="nav-link">My Posts</a>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link logout-btn">Logout</button>
+                </form>
+            {% else %}
+                {% if not request.path == '/login/' %}
+                    <a href="{% url 'login' %}" class="nav-link">Login</a>
+                {% endif %}
+                {% if not request.path == '/register/' %}
+                    <a href="{% url 'signup' %}">Register</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <main>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

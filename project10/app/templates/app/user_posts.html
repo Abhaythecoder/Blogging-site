@@ -1,0 +1,89 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<style>
+    .user-posts-container {
+        max-width: 900px;
+        margin: 30px auto;
+    }
+
+    .post-card {
+        background-color: #1e1e1e;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        color: #e0e0e0;
+    }
+
+    .post-card h3 {
+        margin-bottom: 10px;
+        color: #00bcd4;
+    }
+
+    .post-card p {
+        margin-bottom: 10px;
+    }
+
+    .post-card small {
+        color: #777;
+    }
+
+    .action-buttons {
+        margin-top: 10px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .action-buttons a,
+    .action-buttons button {
+        padding: 8px 15px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95em;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+
+    .action-buttons a {
+        background-color: #00bcd4;
+        color: #fff;
+    }
+
+    .action-buttons a:hover {
+        background-color: #0097a7;
+    }
+
+    .action-buttons button {
+        background-color: #f44336;
+        color: #fff;
+    }
+
+    .action-buttons button:hover {
+        background-color: #d32f2f;
+    }
+</style>
+
+<div class="user-posts-container">
+    <h2>Your Posts</h2>
+
+    {% for post in posts %}
+        <div class="post-card">
+            <h3>{{ post.title|default:"No Title" }}</h3>
+            <p>{{ post.content }}</p>
+            <small>{{ post.created_at }}</small>
+
+            <div class="action-buttons">
+                <a href="{% url 'edit_post' post.pk %}">Edit</a>
+                <form action="{% url 'delete_post' post.pk %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Delete this post?');">Delete</button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <p style="text-align:center; color:#777;">You have no posts yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}
