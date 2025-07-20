@@ -1,4 +1,4 @@
-# Blogging Site
+# Ascendia
 
 A fully-featured Django-powered blogging platform that enables users to create, publish, and manage their blog posts with ease. This application supports a comprehensive set of features including robust user authentication, interactive comments, and efficient post categorization, all presented through a clean and responsive user interface for an optimal content creation and reading experience.
 
